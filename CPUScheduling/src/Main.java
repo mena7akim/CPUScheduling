@@ -1,8 +1,15 @@
+import java.util.Random;
+
 public class Main {
+    interface Scheduler{
+        void addProcesses(Process[] processes);
+        void runScheduler();
+    }
     class Process{
-        private int burstTime;
-        private int arrivalTime;
-        private int priority = 0;
+        protected String name;
+        protected int burstTime;
+        protected int arrivalTime;
+        protected int priority = 0;
 
         public Process(int burstTime, int arrivalTime){
             this.burstTime = burstTime;
@@ -40,19 +47,99 @@ public class Main {
         }
     }
 
-    class SJFScheduler{
+    class AGProcess extends Process{
+        private int AGFactor;
+
+        private int quantumTime;
+
+        public AGProcess(int burstTime, int arrivalTime, int priority, int quantumTime){
+            super(burstTime, arrivalTime, priority);
+            this.quantumTime = quantumTime;
+            this.AGFactor = calcAGFactor();
+        }
+        public int getAGFactor() {
+            return AGFactor;
+        }
+        public void setAGFactor(int AGFactor) {
+            this.AGFactor = AGFactor;
+        }
+
+        public int getQuantumTime() {
+            return quantumTime;
+        }
+
+        public void setQuantumTime(int quantumTime) {
+            this.quantumTime = quantumTime;
+        }
+
+        public int RF(){
+            Random rand = new Random();
+            return rand.nextInt(21);
+        }
+        public int calcAGFactor(){
+            int RFValue = RF();
+            if(RFValue < 10){
+                return RFValue + this.arrivalTime + this.burstTime;
+            }
+            else if(RFValue > 10){
+                return 10 - this.arrivalTime + this.burstTime;
+            }
+            else{
+                return priority + this.arrivalTime + this.burstTime;
+            }
+        }
+    }
+
+    class SJFScheduler implements Scheduler{
+
+        @Override
+        public void addProcesses(Process[] processes) {
+
+        }
+
+        @Override
+        public void runScheduler() {
+
+        }
 
     }
 
-    class SRTFScheduler{
+    class SRTFScheduler implements Scheduler{
+        @Override
+        public void addProcesses(Process[] processes) {
+
+        }
+
+        @Override
+        public void runScheduler() {
+
+        }
+    }
+
+    class PriorityScheduler implements Scheduler{
+        @Override
+        public void addProcesses(Process[] processes) {
+
+        }
+
+        @Override
+        public void runScheduler() {
+
+        }
 
     }
 
-    class PriorityScheduler{
+    class AGScheduler implements Scheduler{
+        @Override
+        public void addProcesses(Process[] processes) {
+            AGProcess[] AGProcesses = (AGProcess[]) processes;
 
-    }
+        }
 
-    class AGScheduler{
+        @Override
+        public void runScheduler() {
+
+        }
 
     }
 
