@@ -27,7 +27,7 @@ class Process{
         this.priority = priority;
     }
 
-    public String getNAme()
+    public String getName()
     {
         return name;
     }
