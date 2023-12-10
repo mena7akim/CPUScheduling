@@ -3,6 +3,10 @@ import java.util.Random;
 interface Scheduler{
     void addProcesses(Process[] processes);
     void runScheduler();
+    double getAverageWaitingTime();
+    double getAverageTurnaroundTime();
+    String getProcessExecutionOrder();
+
 }
 class Process{
     protected String name;
@@ -62,6 +66,10 @@ class AGProcess extends Process{
 
     private int quantumTime;
 
+    String getQuantumTimeHistory() {
+        return null;
+    }
+
     public AGProcess(String name, int burstTime, int arrivalTime, int priority, int quantumTime){
         super(name, burstTime, arrivalTime, priority);
         this.quantumTime = quantumTime;
@@ -111,6 +119,21 @@ class SJFScheduler implements Scheduler{
     public void runScheduler() {
 
     }
+
+    @Override
+    public double getAverageWaitingTime() {
+        return 0;
+    }
+
+    @Override
+    public double getAverageTurnaroundTime() {
+        return 0;
+    }
+
+    @Override
+    public String getProcessExecutionOrder() {
+        return null;
+    }
 }
 
 class SRTFScheduler implements Scheduler{
@@ -122,6 +145,21 @@ class SRTFScheduler implements Scheduler{
     @Override
     public void runScheduler() {
 
+    }
+
+    @Override
+    public double getAverageWaitingTime() {
+        return 0;
+    }
+
+    @Override
+    public double getAverageTurnaroundTime() {
+        return 0;
+    }
+
+    @Override
+    public String getProcessExecutionOrder() {
+        return null;
     }
 }
 
@@ -136,6 +174,21 @@ class PriorityScheduler implements Scheduler{
 
     }
 
+    @Override
+    public double getAverageWaitingTime() {
+        return 0;
+    }
+
+    @Override
+    public double getAverageTurnaroundTime() {
+        return 0;
+    }
+
+    @Override
+    public String getProcessExecutionOrder() {
+        return null;
+    }
+
 }
 
 class AGScheduler implements Scheduler{
@@ -148,6 +201,21 @@ class AGScheduler implements Scheduler{
     @Override
     public void runScheduler() {
 
+    }
+
+    @Override
+    public double getAverageWaitingTime() {
+        return 0;
+    }
+
+    @Override
+    public double getAverageTurnaroundTime() {
+        return 0;
+    }
+
+    @Override
+    public String getProcessExecutionOrder() {
+        return null;
     }
 
 }
