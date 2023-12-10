@@ -108,6 +108,9 @@ class AGProcess extends Process{
     }
 }
 
+
+
+
 class SJFScheduler implements Scheduler{
 
     @Override
