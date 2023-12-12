@@ -67,13 +67,16 @@ public class Application {
         panel.add(mainPanel, PANELS[0]);
         panel.add(schedulersPanel, PANELS[1]);
         CardLayout cl = (CardLayout) panel.getLayout();
-        cl.show(panel, PANELS[1]);
+        cl.show(panel, PANELS[0]);
         frame.add(panel, c);
+        backButton.setVisible(false);
         backButton.addActionListener(e -> {
             cl.show(panel, PANELS[0]);
+            backButton.setVisible(false);
         });
         run.addActionListener(e -> {
             cl.show(panel, PANELS[1]);
+            backButton.setVisible(true);
         });
         frame.setPreferredSize(new Dimension(1000, 600));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

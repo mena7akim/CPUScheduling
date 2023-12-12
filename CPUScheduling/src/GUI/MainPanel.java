@@ -21,20 +21,24 @@ public class MainPanel extends JPanel {
         c.gridy = 0;
         c.insets = new Insets(10, 10, 10, 10);
         buttonPanel.add(add, c);
-        c.gridy = 1;
-        buttonPanel.add(delete, c);
-        c.gridy = 2;
-        buttonPanel.add(run, c);
         c.gridx = 1;
         c.gridy = 0;
-        c.weightx = 0.1;
-        c.weighty = 1;
+        buttonPanel.add(delete, c);
+        c.gridx = 3;
+        c.gridy = 0;
+        buttonPanel.add(run, c);
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weightx = 1;
+        c.weighty = .1;
         c.anchor = GridBagConstraints.LINE_END;
         add(buttonPanel, c);
         c.insets = new Insets(0, 0, 0, 10);
 
         c.gridx = 0;
-        c.weightx = 0.9;
+        c.gridy = 0;
+        c.weightx = 1;
+        c.weighty = .9;
         c.anchor = GridBagConstraints.PAGE_START;
 
         Object[][] data = new Object[5][4];
