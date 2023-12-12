@@ -172,11 +172,6 @@ class SJFScheduler implements Scheduler {
             if(currentProcess == null && !processQueue.isEmpty()) {
                 Process nextProcess = processQueue.poll();
                 processExitTime = currentTime + nextProcess.getBurstTime();
-                nextProcess.setTurnaroundTime(processExitTime - nextProcess.getArrivalTime());
-                nextProcess.setWaitingTime(nextProcess.getTurnaroundTime() - nextProcess.getBurstTime());
-                System.out.println(nextProcess.getName() + " -> waiting time = " +
-                        nextProcess.getWaitingTime() + ", turnaround time = " +
-                        nextProcess.getTurnaroundTime());
                 currentProcess = nextProcess;
             }
             currentTime++;
