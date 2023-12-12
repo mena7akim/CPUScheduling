@@ -161,17 +161,15 @@ class SJFScheduler implements Scheduler {
         int lastProcessIndex = 0;
         int processExitTime = -1;
         Process currentProcess = null;
-        while (lastProcessIndex < processes.length || currentProcess != null || !processQueue.isEmpty())
-        {
-            while (lastProcessIndex < processes.length && processes[lastProcessIndex].getArrivalTime() == currentTime)
-            {
+        while (lastProcessIndex < processes.length || currentProcess != null || !processQueue.isEmpty()) {
+            while (lastProcessIndex < processes.length && processes[lastProcessIndex].getArrivalTime() == currentTime) {
                 processQueue.add(processes[lastProcessIndex]);
                 lastProcessIndex++;
             }
             if (processExitTime == currentTime) {
                 currentProcess = null;
             }
-            if (!processQueue.isEmpty()) {
+            if(currentProcess == null && !processQueue.isEmpty()) {
                 Process nextProcess = processQueue.poll();
                 processExitTime = currentTime + nextProcess.getBurstTime();
                 nextProcess.setTurnaroundTime(processExitTime - nextProcess.getArrivalTime());
@@ -180,8 +178,6 @@ class SJFScheduler implements Scheduler {
                         nextProcess.getWaitingTime() + ", turnaround time = " +
                         nextProcess.getTurnaroundTime());
                 currentProcess = nextProcess;
-            } else {
-                currentTime = processes[lastProcessIndex].getArrivalTime();
             }
             currentTime++;
         }
