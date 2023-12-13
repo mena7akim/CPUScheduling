@@ -129,7 +129,7 @@ class AGProcess extends Process{
 }
 
 
-class ProcessesComparator implements Comparator<Process>{
+class ProcessesComparatorByBurst implements Comparator<Process>{
     @Override
     public int compare(Process p1, Process p2) {
         if(p1.getBurstTime() == p2.getBurstTime()){
@@ -144,15 +144,13 @@ class SJFScheduler implements Scheduler {
 
     double waitingTimeAvg = 0;
     double turnaroundTimeAvg = 0;
-    PriorityQueue<Process> processQueue = new PriorityQueue<>(new ProcessesComparator());
+    PriorityQueue<Process> processQueue = new PriorityQueue<>(new ProcessesComparatorByBurst());
     Process[] processes;
     @Override
     public void addProcesses(Process[] processes) {
         Arrays.sort(processes, (p1, p2) -> Integer.compare(p1.getArrivalTime(), p2.getArrivalTime()));
         this.processes = processes;
-//        for (int i = 0; i < processes.length; i++) {
-//            System.out.println(i + "-" + processes[i].getName() + " in arrival timeee: " + processes[i].getArrivalTime());
-//        }
+
     }
 
     @Override
@@ -173,6 +171,7 @@ class SJFScheduler implements Scheduler {
                 Process nextProcess = processQueue.poll();
                 processExitTime = currentTime + nextProcess.getBurstTime();
                 currentProcess = nextProcess;
+
             }
             currentTime++;
         }
@@ -196,16 +195,62 @@ class SJFScheduler implements Scheduler {
 }
 
 
-class SRTFScheduler implements Scheduler{
+class SRTFScheduler implements Scheduler {
+    double waitingTimeAvg = 0;
+    double turnaroundTimeAvg = 0;
+    PriorityQueue<Process> processQueue = new PriorityQueue<>(new ProcessesComparatorByBurst());
+    Process[] processes;
+
     @Override
     public void addProcesses(Process[] processes) {
-
+        Arrays.sort(processes, (p1, p2) -> Integer.compare(p1.getArrivalTime(), p2.getArrivalTime()));
+        this.processes = processes;
     }
 
     @Override
     public void runScheduler() {
+        int currentTime = 0;
+        int lastProcessIndex = 0;
+        int processExitTime = -1;
+        Process currentProcess = null;
 
+        while (lastProcessIndex < processes.length || currentProcess != null || !processQueue.isEmpty()) {
+            while (lastProcessIndex < processes.length && processes[lastProcessIndex].getArrivalTime() == currentTime) {
+                if (currentProcess != null && processes[lastProcessIndex].getBurstTime() < currentProcess.getBurstTime()) {
+                    processQueue.add(currentProcess);
+                    currentProcess = null;
+                }
+                processQueue.add(processes[lastProcessIndex]);
+                lastProcessIndex++;
+            }
+
+            if (processExitTime == currentTime) {
+                currentProcess = null;
+            }
+
+            if (currentProcess == null && !processQueue.isEmpty()) {
+                Process nextProcess = processQueue.poll();
+                currentProcess = nextProcess;
+                processExitTime = currentTime + currentProcess.getBurstTime();
+                System.out.print(currentProcess.getName() + " ");
+            } else if (!processQueue.isEmpty()) {
+                Process nextProcess = processQueue.poll();
+                if (nextProcess.getBurstTime() < currentProcess.getBurstTime()) {
+                    int remainingTime = currentProcess.getBurstTime() - (currentTime - currentProcess.getArrivalTime());
+                    currentProcess.setBurstTime(remainingTime);
+                    processQueue.add(currentProcess);
+                    currentProcess = nextProcess;
+                    processExitTime = currentTime + currentProcess.getBurstTime();
+                    System.out.print(currentProcess.getName() +  " ");
+                } else {
+                    processQueue.add(nextProcess);
+                }
+            }
+            currentTime++;
+        }
     }
+
+
 
     @Override
     public double getAverageWaitingTime() {
@@ -223,15 +268,72 @@ class SRTFScheduler implements Scheduler{
     }
 }
 
+class ProcessesComparatorByPriority implements Comparator<Process>{
+    @Override
+    public int compare(Process p1, Process p2) {
+        if(p1.getPriority() == p2.getPriority()){
+            return p1.getArrivalTime() - p2.getArrivalTime();
+        }
+        return p1.getPriority() - p2.getPriority();
+    }
+}
 class PriorityScheduler implements Scheduler{
+    double waitingTimeAvg = 0;
+    double turnaroundTimeAvg = 0;
+    PriorityQueue<Process> processQueue = new PriorityQueue<>(new ProcessesComparatorByPriority());
+    Process[] processes;
+
     @Override
     public void addProcesses(Process[] processes) {
-
+        Arrays.sort(processes, (p1, p2) -> Integer.compare(p1.getArrivalTime(), p2.getArrivalTime()));
+        this.processes = processes;
     }
-
     @Override
     public void runScheduler() {
+        int currentTime = 0;
+        int lastProcessIndex = 0;
+        int processExitTime = -1;
+        Process currentProcess = null;
 
+        while (lastProcessIndex < processes.length || currentProcess != null || !processQueue.isEmpty()) {
+            while (lastProcessIndex < processes.length && processes[lastProcessIndex].getArrivalTime() == currentTime) {
+                if (currentProcess != null && processes[lastProcessIndex].getBurstTime() < currentProcess.getBurstTime()) {
+                    processQueue.add(currentProcess);
+                    currentProcess = null;
+                }
+                processQueue.add(processes[lastProcessIndex]);
+                lastProcessIndex++;
+            }
+
+            if (processExitTime == currentTime) {
+                currentProcess = null;
+            }
+
+            if (currentProcess == null && !processQueue.isEmpty()) {
+                Process nextProcess = processQueue.poll();
+                currentProcess = nextProcess;
+                processExitTime = currentTime + currentProcess.getBurstTime();
+                System.out.print(currentProcess.getName() + " ");
+            }
+            else if (!processQueue.isEmpty()) {
+                Process nextProcess = processQueue.poll();
+                if (nextProcess.getPriority() < currentProcess.getPriority()) {
+                    int remainingTime = currentProcess.getBurstTime() - (currentTime - currentProcess.getArrivalTime());
+                    currentProcess.setBurstTime(remainingTime);
+                    processQueue.add(currentProcess);
+                    currentProcess = nextProcess;
+                    processExitTime = currentTime + currentProcess.getBurstTime();
+                    System.out.print(currentProcess.getName() + " ");
+
+                } else {
+                    processQueue.add(nextProcess);
+                }
+            }
+
+
+            currentTime++;
+
+        }
     }
 
     @Override
@@ -281,32 +383,44 @@ class AGScheduler implements Scheduler{
 }
 public class Main {
     public static void main(String[] args) {
-        Process p1 = new Process("P1", 7, 0);
 
-        Process p2 = new Process("P2", 4, 2);
+        Process pro1 = new Process("P1", 7, 0);
 
-        Process p3 = new Process("P3", 1, 4);
+        Process pro2 = new Process("P2", 4, 2);
 
-        Process p4 = new Process("P4", 4, 5);
+        Process pro3 = new Process("P3", 1, 4);
+
+        Process pro4 = new Process("P4", 4, 5);
 
 
-
+        System.out.println("SJF: ");
         SJFScheduler sjfScheduler = new SJFScheduler();
-        sjfScheduler.addProcesses(new Process[]{p1, p2, p3, p4});
+        sjfScheduler.addProcesses(new Process[]{pro1, pro2, pro3, pro4});
         sjfScheduler.runScheduler();
 
-//        System.out.println("Processes Execution Order: " + sjfScheduler.getProcessExecutionOrder());     //p1 p3 p2 p4
-//        System.out.println("Average Waiting Time: " + sjfScheduler.getAverageWaitingTime());
-//        System.out.println("Average Turnaround Time: " + sjfScheduler.getAverageTurnaroundTime());
-//
-//
-//        for (Process process : sjfScheduler.processQueue) {
-//            System.out.println("Process " + process.getName() +
-//                    " - Waiting Time: " + process.getWaitingTime() +
-//                    ", Turnaround Time: " + process.getTurnaroundTime());
-//        }
+        System.out.println("SRTF: ");
+        SRTFScheduler srtfScheduler = new SRTFScheduler();
+        srtfScheduler.addProcesses(new Process[]{pro1, pro2, pro3, pro4});
+        srtfScheduler.runScheduler();
+
+        System.out.println("\n" + "===========================================");
+        Process p1 = new Process("P1", 10, 0, 3);
+
+        Process p2 = new Process("P2", 1, 0, 1);
+
+        Process p3 = new Process("P3", 2, 0, 4);
+
+        Process p4 = new Process("P4", 1, 0, 5);
+
+        Process p5 = new Process("P5", 5, 0, 2);
+
+        System.out.println("Priority: ");
+        PriorityScheduler pScheduler = new PriorityScheduler();
+        pScheduler.addProcesses(new Process[]{p1, p2, p3, p4, p5});
+        pScheduler.runScheduler();
 
 
-        System.out.println("Helloooooooooooooo world!");
+
+//        System.out.println("Helloooooooooooooo world!");
     }
 }
