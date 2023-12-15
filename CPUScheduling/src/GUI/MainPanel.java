@@ -8,7 +8,7 @@ import javax.swing.table.DefaultTableModel;
 import com.formdev.flatlaf.FlatClientProperties;
 
 public class MainPanel extends JPanel {
-    public MainPanel(JButton run){
+    public MainPanel(JButton run, JTable table){
         setLayout(new GridBagLayout());
         JButton add = new CustomButton("Add", "2C74B3");
         JPanel buttonPanel = new JPanel(new GridBagLayout());
@@ -41,14 +41,6 @@ public class MainPanel extends JPanel {
         c.weighty = .9;
         c.anchor = GridBagConstraints.PAGE_START;
 
-        Object[][] data = new Object[5][4];
-        data[0] = new Object[]{"P1", 0, 5, 1};
-        data[1] = new Object[]{"P2", 1, 3, 2};
-        data[2] = new Object[]{"P3", 2, 8, 3};
-        data[3] = new Object[]{"P4", 3, 6, 4};
-        data[4] = new Object[]{"P5", 4, 4, 5};
-        String[] columnNames = {"Process Name", "Arrival Time", "Burst Time", "Priority"};
-        JTable table = new ProcessesTable(data, columnNames);
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         table.setBorder(BorderFactory.createEmptyBorder());
@@ -69,7 +61,5 @@ public class MainPanel extends JPanel {
                 JOptionPane.showMessageDialog(null, "Please select a row to delete", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
-
-
     }
 }
