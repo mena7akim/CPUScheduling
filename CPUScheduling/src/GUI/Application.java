@@ -2,16 +2,12 @@ package GUI;
 
 import javax.swing.*;
 import java.awt.*;
-
 import com.formdev.flatlaf.FlatLaf;
-import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
-import org.jfree.layout.CenterLayout;
-
 
 public class Application {
     final static String[] PANELS = {"Main", "Schedulers"};
-    public static void main(String[] args) {
+    public Application() {
         FlatLaf.registerCustomDefaultsSource("GUI");
         FlatMacLightLaf.setup();
 

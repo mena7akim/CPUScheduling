@@ -33,7 +33,7 @@ public class SJFScheduler implements Scheduler {
         int processExitTime = -1;
         Process currentProcess = null;
         while (lastProcessIndex < processes.length || currentProcess != null || !processQueue.isEmpty()) {
-            while (lastProcessIndex < processes.length && processes[lastProcessIndex].getArrivalTime() == currentTime) {
+            while (lastProcessIndex < processes.length && processes[lastProcessIndex].getArrivalTime() <= currentTime) {
                 processQueue.add(processes[lastProcessIndex]);
                 lastProcessIndex++;
             }
